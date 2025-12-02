@@ -34,10 +34,18 @@ const SignUp = () => {
     setError("");
 
     // SignUp Api Call
-    if (profilePic) {
-      const imageUrl = await uploadImage(profilePic);
-      profileImageUrl = imageUrl.url;
-      
+    try {
+      if (profilePic) {
+        const imageUrl = await uploadImage(profilePic);
+        profileImageUrl = imageUrl.url;
+      }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("The image size should be less than 5MB. Please try again.");
+      }
+      return;
     }
 
     try {
