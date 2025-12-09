@@ -1,4 +1,4 @@
-export const BASE_URL = "http://expensetracker-env.eba-hgtp6fbu.eu-north-1.elasticbeanstalk.com";
+export const BASE_URL = "/api";
 
 export const API_PATHS = {
   AUTH: {
