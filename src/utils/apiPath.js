@@ -1,4 +1,4 @@
-export const BASE_URL = "/api";
+export const BASE_URL = "https://expense-tracker-1-lpc5.onrender.com";
 
 export const API_PATHS = {
   AUTH: {
