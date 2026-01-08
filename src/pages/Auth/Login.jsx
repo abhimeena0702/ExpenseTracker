@@ -10,7 +10,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false)
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
   const handleLogin = async (event) => {
@@ -26,7 +25,6 @@ const Login = () => {
     setError("");
 
     // Login Api Call
-    setIsLoading(true);
     try {
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email,
@@ -48,8 +46,6 @@ const Login = () => {
       } else {
         setError("something went wrong. Please try again.");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
@@ -66,7 +62,6 @@ const Login = () => {
             label="Email Address"
             placeholder="john@example.com"
             type="text"
-            isLoading={isLoading}
           />
           <Input
             value={password}
@@ -74,23 +69,10 @@ const Login = () => {
             label="Password"
             placeholder="Min 8 Characters"
             type="password"
-            isLoading={isLoading}
           />
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="btn-primary"
-            onClick={handleLogin}
-          >
-            {isLoading ? (
-              <>
-                <span className="mr-4">LOGGING IN</span>
-                <span className="loading loading-spinner loading-sm border-purple-600"></span>
-              </>
-            ) : (
-              "LOGIN"
-            )}
+          <button type="submit" className="btn-primary" onClick={handleLogin}>
+            LOGIN
           </button>
           <p className="text-[13px] text-slate-800 mt-3">
             Don't have a account?{" "}

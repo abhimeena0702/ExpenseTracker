@@ -14,7 +14,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
   const handleSignUp = async () => {
@@ -35,7 +34,6 @@ const SignUp = () => {
     setError("");
 
     // SignUp Api Call
-    setIsLoading(true);
     try {
       if (profilePic) {
         const imageUrl = await uploadImage(profilePic);
@@ -47,7 +45,6 @@ const SignUp = () => {
       } else {
         setError("The image size should be less than 5MB. Please try again.");
       }
-      setIsLoading(false);
       return;
     }
 
@@ -70,8 +67,6 @@ const SignUp = () => {
       } else {
         setError("something went wrong. Please try again");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
@@ -82,7 +77,7 @@ const SignUp = () => {
           Join us today by entering the details below.
         </p>
         <form action={handleSignUp}>
-          <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} isLoading={isLoading} />
+          <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               value={fullName}
@@ -90,7 +85,6 @@ const SignUp = () => {
               label="Full Name"
               placeholder="John"
               type="text"
-              isLoading={isLoading}
             />
             <Input
               value={email}
@@ -98,7 +92,6 @@ const SignUp = () => {
               label="Email Address"
               placeholder="john@example.com"
               type="text"
-              isLoading={isLoading}
             />
             <div className="col-span-2">
               <Input
@@ -107,24 +100,12 @@ const SignUp = () => {
                 label="Password"
                 placeholder="Min 8 Characters"
                 type="password"
-                isLoading={isLoading}
               />
             </div>
           </div>
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="mr-4">SIGNING UP</span>
-                <span className="loading loading-spinner loading-sm border-purple-600"></span>
-              </>
-            ) : (
-              "SIGN UP"
-            )}
+          <button type="submit" className="btn-primary">
+            SIGN UP
           </button>
           <p className="text-[13px] text-slate-800 mt-3">
             Already have an account?{" "}
