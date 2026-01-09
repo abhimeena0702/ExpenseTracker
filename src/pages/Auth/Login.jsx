@@ -6,10 +6,13 @@ import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPath";
 import { UserContext } from "../../context/UserContext";
+import Spinner from "../../components/spinner/Spinner";
+import toast from "react-hot-toast";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
   const handleLogin = async (event) => {
@@ -23,6 +26,7 @@ const Login = () => {
       return;
     }
     setError("");
+    setIsLoading(true);
 
     // Login Api Call
     try {
@@ -34,6 +38,7 @@ const Login = () => {
       if (token) {
         localStorage.setItem("token", token);
         updateUser(user);
+        toast.success("Logged in successfully");
         navigate("/dashboard");
       }
     } catch (error) {
@@ -46,6 +51,8 @@ const Login = () => {
       } else {
         setError("something went wrong. Please try again.");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -62,6 +69,7 @@ const Login = () => {
             label="Email Address"
             placeholder="john@example.com"
             type="text"
+            isLoading={isLoading}
           />
           <Input
             value={password}
@@ -69,14 +77,31 @@ const Login = () => {
             label="Password"
             placeholder="Min 8 Characters"
             type="password"
+            isLoading={isLoading}
           />
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
-          <button type="submit" className="btn-primary" onClick={handleLogin}>
-            LOGIN
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn-primary"
+            onClick={handleLogin}
+          >
+            {isLoading ? (
+              <>
+                LOGGING IN <Spinner />
+              </>
+            ) : (
+              "LOGIN"
+            )}
           </button>
           <p className="text-[13px] text-slate-800 mt-3">
             Don't have a account?{" "}
-            <Link className="font-medium text-primary underline" to="/signup">
+            <Link
+              className={`font-medium text-primary underline ${
+                isLoading ? "opacity-50 pointer-events-none" : " "
+              }`}
+              to="/signup"
+            >
               SignUp
             </Link>
           </p>
